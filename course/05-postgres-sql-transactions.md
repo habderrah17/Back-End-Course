@@ -56,7 +56,7 @@ sequenceDiagram
   DB-->>API: IDs / constraints validated
   API->>DB: COMMIT
   DB-->>API: Commit acknowledged
-  API->>API: Return 201; outbox worker sends async confirmation
+  API->>API: Return 201, outbox worker sends async confirmation
   Note over API,DB: Any failed step before COMMIT rolls back the business write set
 ```
 

@@ -96,11 +96,11 @@ sequenceDiagram
   E->>A: Authenticate
   A->>DB: Find normalized identity + password hash
   DB-->>A: User row
-  A->>A: Argon2 verify; apply account/IP controls
-  A->>DB: Rotate old session; create new opaque session
+  A->>A: Argon2 verify, apply account/IP controls
+  A->>DB: Rotate old session, create new opaque session
   DB-->>A: Session persisted
   A-->>E: Principal + session handle
-  E-->>B: 200 + Set-Cookie HttpOnly; Secure; SameSite
+  E-->>B: 200 + Set-Cookie HttpOnly, Secure, SameSite
 ```
 
 ### Authenticated request
@@ -117,7 +117,7 @@ sequenceDiagram
   E->>P: Authenticated principal + requested resource
   P->>P: Authorize action and ownership/tenant
   P-->>E: Allowed result or forbidden/not found
-  E-->>B: Minimal response; no session secret
+  E-->>B: Minimal response, no session secret
 ```
 
 ### Refresh-token rotation (alternative token architecture)
@@ -130,7 +130,7 @@ sequenceDiagram
   participant DB as Token Store
   B->>E: POST /api/v1/auth/refresh + HttpOnly refresh cookie
   E->>A: Validate cookie / CSRF context
-  A->>DB: Find token hash and family; check expiry/revocation
+  A->>DB: Find token hash and family, check expiry/revocation
   DB-->>A: Active token record
   A->>DB: Atomically consume old token + persist replacement
   DB-->>A: Rotation committed

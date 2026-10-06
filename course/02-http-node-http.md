@@ -99,7 +99,7 @@ sequenceDiagram
   OS->>Proxy: HTTP request bytes
   Proxy->>Proxy: TLS termination, limits, routing, health policy
   Proxy->>Node: Forward request to selected instance
-  Node->>App: Parse HTTP; deliver request and response objects
+  Node->>App: Parse HTTP, deliver request and response objects
   App->>DB: Validate, authorize, query/transaction
   DB-->>App: Result
   App-->>Node: Status + headers + response body

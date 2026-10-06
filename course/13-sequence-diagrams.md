@@ -70,8 +70,8 @@ sequenceDiagram
   Express->>Auth: Authenticate
   Auth->>DB: Read normalized user + password hash
   DB-->>Auth: User record
-  Auth->>Auth: Verify Argon2id; apply throttle
-  Auth->>DB: Rotate old ID; persist new session
+  Auth->>Auth: Verify Argon2id, apply throttle
+  Auth->>DB: Rotate old ID, persist new session
   DB-->>Auth: Session created
   Auth-->>Express: Principal + opaque session ID
   Express-->>Browser: 200 + Secure HttpOnly SameSite cookie
@@ -179,13 +179,13 @@ sequenceDiagram
   participant DB as PostgreSQL
   participant Outbox
   participant Redis
-  API->>DB: BEGIN; update product; insert cache-invalidation outbox event
+  API->>DB: BEGIN, update product, insert cache-invalidation outbox event
   API->>DB: COMMIT
   DB-->>API: Success
   API-->>Client: Updated product
   Outbox->>Redis: Delete/invalidate versioned detail/list keys (retryable)
   Redis-->>Outbox: Acknowledged
-  Note over DB,Redis: PostgreSQL commit and Redis delete are not one distributed transaction; TTL/versioning bounds stale data
+  Note over DB,Redis: PostgreSQL commit and Redis delete are not one distributed transaction, TTL/versioning bounds stale data
 ```
 
 ## Queue + worker
@@ -240,7 +240,7 @@ sequenceDiagram
   participant DB as PostgreSQL
   participant Pay as Payment Provider
   Client->>API: POST /payments + Idempotency-Key K
-  API->>DB: Begin; reserve unique (tenant,user,operation,K)
+  API->>DB: Begin, reserve unique (tenant,user,operation,K)
   alt first request
     API->>DB: Persist request hash + pending operation
     API->>Pay: Create intent using provider idempotency key
@@ -331,8 +331,8 @@ sequenceDiagram
   API->>API: Mark readiness false
   API-->>LB: Readiness 503
   LB->>API: Stop routing new traffic
-  API->>API: Stop accepting connections; drain in-flight HTTP
-  API->>Queue: Stop claiming jobs; complete or release for retry
+  API->>API: Stop accepting connections, drain in-flight HTTP
+  API->>Queue: Stop claiming jobs, complete or release for retry
   API->>API: Close SSE/WebSocket connections by policy
   API->>DB: Close Redis/DB/queue connections
   DB-->>API: Closed

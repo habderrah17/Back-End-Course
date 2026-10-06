@@ -177,7 +177,7 @@ sequenceDiagram
   participant DB as PostgreSQL / Redis
   C->>D: Resolve API hostname
   D-->>C: Address records
-  C->>P: TCP + TLS; HTTP request
+  C->>P: TCP + TLS, HTTP request
   P->>P: Limits, TLS policy, routing, optional request ID
   P->>N: Forward request (trusted proxy boundary)
   N->>E: IncomingMessage / ServerResponse
@@ -225,7 +225,7 @@ sequenceDiagram
   A->>V: Parse and validate untrusted body
   V-->>A: Valid login input
   A->>S: Authenticate identity
-  S->>DB: Find user; verify password hash; create session
+  S->>DB: Find user, verify password hash, create session
   DB-->>S: User + opaque session record
   S-->>A: Session identifier (never expose its secret in logs)
   A-->>B: 200 + Set-Cookie (HttpOnly, Secure, SameSite)
@@ -255,7 +255,7 @@ sequenceDiagram
   API-->>C: 201 Created (do not wait for email)
   API->>Q: Publish outbox event (or outbox relay publishes)
   Q->>W: Deliver job (at least once)
-  W->>M: Send confirmation; use idempotent provider key where available
+  W->>M: Send confirmation, use idempotent provider key where available
   W-->>Q: Acknowledge success / retry bounded failure
 ```
 
